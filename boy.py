@@ -88,7 +88,7 @@ class Idle:
 
     @staticmethod
     def draw(boy):
-        boy.image.clip_draw(int(boy.frame) * 181, 0, 183, 166, boy.x, boy.y)
+        boy.image.clip_draw(int(boy.frame) * 181, 0, 181, 166, boy.x, boy.y)
 
 class Run:
 
@@ -117,9 +117,9 @@ class Run:
     @staticmethod
     def draw(boy):
         if boy.face_dir == 1:
-             boy.image.clip_draw(int(boy.frame) * 181, 166, 183, 166, boy.x, boy.y)
+             boy.image.clip_draw(int(boy.frame) * 181, 166, 181, 166, boy.x, boy.y)
         else:
-             boy.image.clip_composite_draw(int(boy.frame) * 181, 166, 185, 166, 0,'h', boy.x, boy.y,183,166)
+             boy.image.clip_composite_draw(int(boy.frame) * 181, 166, 181, 166, 0,'h', boy.x, boy.y,183,166)
 
 
 class Sleep:
