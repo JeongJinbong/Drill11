@@ -7,7 +7,7 @@ RUN_SPEED_PPS = RUN_SPEED_MPS * PIXEL_PER_METER
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0/ TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
+FRAMES_PER_ACTION = 5
 FRAMES_PER_TIME = ACTION_PER_TIME * FRAMES_PER_ACTION
 
 from pico2d import get_time, load_image, load_font, clamp,  SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
@@ -82,15 +82,13 @@ class Idle:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_TIME * game_framework.frame_time) % 8
+        boy.frame = (boy.frame + FRAMES_PER_TIME * game_framework.frame_time) % 4
         if get_time() - boy.wait_time > 2:
             boy.state_machine.handle_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(boy):
-        boy.image.clip_draw(int(boy.frame) * 100, boy.action * 100, 100, 100, boy.x, boy.y)
-
-
+        boy.image.clip_draw(int(boy.frame) * 181, 0, 183, 166, boy.x, boy.y)
 
 class Run:
 
@@ -110,7 +108,7 @@ class Run:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_TIME * game_framework.frame_time) % 8
+        boy.frame = (boy.frame + FRAMES_PER_TIME * game_framework.frame_time) % 5
         #boy.x += boy.dir * 5
         boy.x += boy.dir * RUN_SPEED_PPS * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1600-25)
@@ -118,8 +116,10 @@ class Run:
 
     @staticmethod
     def draw(boy):
-        boy.image.clip_draw(int(boy.frame) * 100, boy.action * 100, 100, 100, boy.x, boy.y)
-
+        if boy.face_dir == 1:
+             boy.image.clip_draw(int(boy.frame) * 181, 166, 183, 166, boy.x, boy.y)
+        else:
+             boy.image.clip_composite_draw(int(boy.frame) * 181, 166, 185, 166, 0,'h', boy.x, boy.y,183,166)
 
 
 class Sleep:
@@ -135,14 +135,14 @@ class Sleep:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_TIME * game_framework.frame_time) % 8
+        boy.frame = (boy.frame + FRAMES_PER_TIME * game_framework.frame_time) % 5
 
 
 
     @staticmethod
     def draw(boy):
         if boy.face_dir == -1:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100,
+            boy.image.clip_composite_draw(int(boy.frame) * 180, 166*2, 180, 166,
                                           -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
         else:
             boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100,
@@ -184,13 +184,12 @@ class StateMachine:
 
 class Boy:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 400, 166
         self.frame = 0
         self.action = 3
         self.face_dir = 1
         self.dir = 0
-        self.image = load_image('animation_sheet.png')
-        self.font = load_font('ENCR10B.TTF',16)
+        self.image = load_image('bird_animation.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.item = 'Ball'
@@ -220,4 +219,4 @@ class Boy:
 
     def draw(self):
         self.state_machine.draw()
-        self.font.draw(self.x-60, self.y+50, f'{get_time()}', (255,255,0))
+

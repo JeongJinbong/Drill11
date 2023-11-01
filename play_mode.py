@@ -29,7 +29,6 @@ def init():
     boy = Boy()
     game_world.add_object(boy, 1)
 
-
 def finish():
     game_world.clear()
     pass
@@ -37,7 +36,6 @@ def finish():
 
 def update():
     game_world.update()
-    delay(0.2)
     # delay(0.1)
 
 
